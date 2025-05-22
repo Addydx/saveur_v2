@@ -30,4 +30,15 @@ class SpoonacularService {
       throw Exception('Error al obtener la receta: ${response.statusCode}');
     }
   }
+
+  Future<Map<String, dynamic>> getRecipeDetail(int id) async {
+    final url = Uri.parse('$_baseUrl/recipes/$id/information?includeNutrition=false&apiKey=$_apiKey');
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Error al obtener detalles de la receta: ${response.statusCode}');
+    }
+  }
 }

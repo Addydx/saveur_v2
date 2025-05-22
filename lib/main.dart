@@ -16,10 +16,10 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   
-  // Configuración inicial de proveedores de autenticación
+  
   FirebaseUIAuth.configureProviders([EmailAuthProvider()]);
   
-  runApp(const MyApp()); // ¡Solo una vez!
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
