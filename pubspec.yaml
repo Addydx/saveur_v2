@@ -56,6 +56,12 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
 
+#lo que añadiera segun la ia
+  font_awesome_flutter: ^10.7.0 # Usa la última versión disponible
+  cached_network_image: ^3.3.1 # Ya la tienes, pero la confirmo
+
+
+  google_fonts: ^6.2.1 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

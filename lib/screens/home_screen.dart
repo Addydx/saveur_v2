@@ -55,10 +55,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _navigateToRecipeDetail(int index) {
+    final recipeId = _recipes[index]['id'];
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => RecipeDetailScreen(recipe: _recipes[index]),
+        builder: (context) => RecipeDetailScreen(recipeId: recipeId),
       ),
     );
   }
@@ -67,7 +68,22 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Saveur'),
+        title: const Text(
+          'Saveur',
+          style: TextStyle(
+            color: Colors.green,
+            fontWeight: FontWeight.bold,
+            fontSize: 28,
+            letterSpacing: 2,
+            shadows: [
+              Shadow(
+          blurRadius: 4,
+          color: Colors.black26,
+          offset: Offset(2, 2),
+              ),
+            ],
+          ),
+        ),
         centerTitle: true,
         actions: [
           IconButton(
@@ -76,57 +92,60 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: _currentIndex == 0
-          ? Column(
-              children: [
-                if (_isLoading)
-                  const Expanded(
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  )
-                else if (_errorMessage != null)
-                  Expanded(
-                    child: Center(
+      body:
+          _currentIndex == 0
+              ? Column(
+                children: [
+                  if (_isLoading)
+                    const Expanded(
+                      child: Center(child: CircularProgressIndicator()),
+                    )
+                  else if (_errorMessage != null)
+                    Expanded(
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(_errorMessage!),
+                            const SizedBox(height: 16),
+                            ElevatedButton(
+                              onPressed: _loadRecipes,
+                              child: const Text('Reintentar'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  else
+                    Expanded(
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(_errorMessage!),
-                          const SizedBox(height: 16),
-                          ElevatedButton(
-                            onPressed: _loadRecipes,
-                            child: const Text('Reintentar'),
+                          RecipeCarouselCard(
+                            recipes: _recipes,
+                            onRecipeTap: _navigateToRecipeDetail,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  _currentIndex =
+                                      1; // Cambia a la pantalla DiscoverScreen
+                                });
+                                // Acción para explorar más recetas
+                              },
+                              style: ElevatedButton.styleFrom(
+                                minimumSize: const Size(double.infinity, 50),
+                              ),
+                              child: const Text('Explorar más recetas'),
+                            ),
                           ),
                         ],
                       ),
                     ),
-                  )
-                else
-                  Expanded(
-                    child: Column(
-                      children: [
-                        RecipeCarouselCard(
-                          recipes: _recipes,
-                          onRecipeTap: _navigateToRecipeDetail,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              // Acción para explorar más recetas
-                            },
-                            style: ElevatedButton.styleFrom(
-                              minimumSize: const Size(double.infinity, 50),
-                            ),
-                            child: const Text('Explorar más recetas'),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-              ],
-            )
-          : _screens[_currentIndex], // Cambia la pantalla según el índice,
+                ],
+              )
+              : _screens[_currentIndex], // Cambia la pantalla según el índice,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) {
@@ -135,18 +154,12 @@ class _HomeScreenState extends State<HomeScreen> {
           });
         },
         items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Inicio',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
           BottomNavigationBarItem(
             icon: Icon(Icons.explore),
             label: 'Descubrir',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Buscar',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Buscar'),
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_cart),
             label: 'Carrito',
@@ -156,3 +169,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+
+
+
