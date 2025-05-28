@@ -15,6 +15,23 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   bool _isLoading = true;
   String? _error;
 
+  // Añade una lista global o usa Provider/State Management para favoritos
+  static List<Map<String, dynamic>> favoriteRecipes = [];
+
+  bool get isFavorite {
+    return favoriteRecipes.any((r) => r['id'] == widget.recipeId);
+  }
+
+  void _toggleFavorite() {
+    setState(() {
+      if (isFavorite) {
+        favoriteRecipes.removeWhere((r) => r['id'] == widget.recipeId);
+      } else if (_recipeDetail != null) {
+        favoriteRecipes.add(_recipeDetail!);
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -41,6 +58,15 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_recipeDetail?['title'] ?? 'Detalles de la receta'),
+        actions: [
+          IconButton(
+            icon: Icon(
+              isFavorite ? Icons.favorite : Icons.favorite_border,
+              color: Colors.red,
+            ),
+            onPressed: _toggleFavorite,
+          ),
+        ],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())

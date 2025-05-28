@@ -9,9 +9,8 @@ import 'package:saveur/screens/search_screen.dart';
 import 'package:saveur/screens/discover_screen.dart';
 import 'package:saveur/screens/shopping_cart.dart';
 import 'package:saveur/screens/recipe_detail_screen.dart';
+import 'package:saveur/screens/main_navigation_screen.dart';
 
-import 'package:flutter/material.dart';
-// ... tus otros imports
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -51,7 +50,7 @@ class MyApp extends StatelessWidget {
           // iconTheme: IconThemeData(color: Colors.black87),
         ),
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          selectedItemColor: Colors.green, // Ítem seleccionado en verde
+          selectedItemColor: Colors.black, // Ítem seleccionado en verde
           unselectedItemColor: Colors.grey, // Ítems no seleccionados en gris
           backgroundColor: Colors.white, // Fondo de la barra blanco
           elevation: 8, // Sombra para darle profundidad
@@ -87,7 +86,7 @@ class MyApp extends StatelessWidget {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Colors.green, width: 2), // Borde verde al enfocar
+            borderSide: const BorderSide(color: Color.fromARGB(255, 137, 76, 175), width: 2), // Borde verde al enfocar
           ),
           contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
         ),
@@ -107,7 +106,7 @@ class MyApp extends StatelessWidget {
             }),
           ],
         ),
-        '/home': (context) => const HomeScreen(),
+        '/home': (context) => const MainNavigationScreen(),
         '/account': (context) => const AccountScreen(),
         '/profile': (context) => ProfileScreen(
           actions: [
