@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../services/spoonacular_service.dart';
 import 'package:saveur/screens/favorite_recipes_screen.dart'; // Importa tu manager
+import '../data/favorite_recipes_manager.dart';
+import '../data/shopping_cart_manager.dart';
 
 class RecipeDetailScreen extends StatefulWidget {
   final int recipeId;
@@ -13,6 +15,7 @@ class RecipeDetailScreen extends StatefulWidget {
 class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   final SpoonacularService _service = SpoonacularService();
   final FavoriteRecipesManager _favoritesManager = FavoriteRecipesManager();
+  final ShoppingCartManager _cartManager = ShoppingCartManager();
   Map<String, dynamic>? _recipeDetail;
   bool _isLoading = true;
   String? _error;
@@ -125,9 +128,32 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                               style: TextStyle(
                                   fontSize: 18, fontWeight: FontWeight.bold),
                             ),
-                            ...(_recipeDetail!['extendedIngredients'] as List)
-                                .map((ing) => Text('- ${ing['original']}'))
-                                .toList(),
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: _recipeDetail!['extendedIngredients'].length,
+                              itemBuilder: (context, index) {
+                                final ingredient = _recipeDetail!['extendedIngredients'][index];
+                                final imageUrl = ingredient['image'] != null
+                                    ? 'https://spoonacular.com/cdn/ingredients_100x100/${ingredient['image']}'
+                                    : null;
+                                return ListTile(
+                                  leading: imageUrl != null
+                                      ? Image.network(imageUrl, width: 40, height: 40, fit: BoxFit.cover)
+                                      : const Icon(Icons.image_not_supported),
+                                  title: Text(ingredient['original']),
+                                  trailing: IconButton(
+                                    icon: const Icon(Icons.add_shopping_cart),
+                                    onPressed: () async {
+                                      await _cartManager.addIngredient(ingredient);
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(content: Text('Ingrediente añadido al carrito')),
+                                      );
+                                    },
+                                  ),
+                                );
+                              },
+                            ),
                           ],
                         ),
                       const SizedBox(height: 16),

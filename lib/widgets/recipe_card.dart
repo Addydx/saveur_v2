@@ -47,6 +47,7 @@ class RecipeCard extends StatelessWidget {
                 title,
                 style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 overflow: TextOverflow.ellipsis,
+                maxLines: 2, // Limita a 2 líneas
               ),
             ),
           ],

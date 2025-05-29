@@ -8,6 +8,7 @@ import '../widgets/recipe_card.dart';
 import 'recipe_detail_screen.dart';
 import '../widgets/custom_list_view.dart';
 import 'favorite_recipes_screen.dart'; // Importa tu manager
+import '../data/favorite_recipes_manager.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,7 +21,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final SpoonacularService _spoonacularService = SpoonacularService();
   final FavoriteRecipesManager _favoritesManager = FavoriteRecipesManager();
   List<dynamic> _recipes = [];
-  List<Map<String, dynamic>> _favoriteRecipes = []; // Lista para las recetas favoritas
+  List<Map<String, dynamic>> _favoriteRecipes =
+      []; // Lista para las recetas favoritas
   bool _isLoading = true;
   String? _errorMessage;
 
@@ -40,12 +42,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _loadRecipes() async {
     try {
-      final recipes = await _spoonacularService.getPopularRecipes(number: 20);
+      final recipes = await _spoonacularService.getPopularRecipes(number: 2);
       final favoriteIds = await _favoritesManager.getFavoriteRecipeIds();
-      final favoriteRecipes = recipes
-          .where((r) => favoriteIds.contains(r['id']))
-          .map((r) => Map<String, dynamic>.from(r))
-          .toList();
+      final favoriteRecipes =
+          recipes
+              .where((r) => favoriteIds.contains(r['id']))
+              .map((r) => Map<String, dynamic>.from(r))
+              .toList();
 
       if (mounted) {
         setState(() {
@@ -66,27 +69,28 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _loadFavoriteRecipes() async {
-  final favoriteIds = await _favoritesManager.getFavoriteRecipeIds();
-  List<Map<String, dynamic>> favoriteRecipes = [];
-  for (final id in favoriteIds) {
-    final recipe = await _spoonacularService.getRecipeDetail(id);
-    favoriteRecipes.add(recipe);
+    final favoriteIds = await _favoritesManager.getFavoriteRecipeIds();
+    List<Map<String, dynamic>> favoriteRecipes = [];
+    for (final id in favoriteIds) {
+      final recipe = await _spoonacularService.getRecipeDetail(id);
+      favoriteRecipes.add(recipe);
+    }
+    if (!mounted) return; // <--- Esto es clave
+    setState(() {
+      _favoriteRecipes = favoriteRecipes;
+    });
   }
-  setState(() {
-    _favoriteRecipes = favoriteRecipes;
-  });
-}
 
   void _navigateToRecipeDetail(int index) async {
-  final recipeId = _recipes[index]['id'];
-  await Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => RecipeDetailScreen(recipeId: recipeId),
-    ),
-  );
-  _loadFavoriteRecipes(); // Refresca favoritos al volver
-}
+    final recipeId = _recipes[index]['id'];
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => RecipeDetailScreen(recipeId: recipeId),
+      ),
+    );
+    _loadFavoriteRecipes(); // Refresca favoritos al volver
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,9 +105,9 @@ class _HomeScreenState extends State<HomeScreen> {
             letterSpacing: 2,
             shadows: [
               Shadow(
-          blurRadius: 4,
-          color: Color.fromARGB(66, 152, 238, 152),
-          offset: Offset(2, 2),
+                blurRadius: 4,
+                color: Color.fromARGB(66, 152, 238, 152),
+                offset: Offset(2, 2),
               ),
             ],
           ),
@@ -163,7 +167,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 8,
+                            ),
                             child: Text(
                               'Recetas favoritas',
                               style: const TextStyle(
@@ -173,25 +180,49 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           Expanded(
-                            child: _favoriteRecipes.isEmpty
-                                ? const Center(child: Text('No tienes recetas favoritas.'))
-                                : CustomListView(
-                                    recipes: _favoriteRecipes,
-                                    favoriteRecipes: _favoriteRecipes,
-                                    showFavoriteIcon: true,
-                                    onTap: (recipe) => _navigateToRecipeDetail(_recipes.indexWhere((r) => r['id'] == recipe['id'])),
-                                    onFavoriteTap: (recipe) {
-                                      setState(() {
-                                        final exists = _favoriteRecipes.any((r) => r['id'] == recipe['id']);
-                                        if (exists) {
-                                          _favoriteRecipes.removeWhere((r) => r['id'] == recipe['id']);
-                                        } else {
-                                          _favoriteRecipes.add(Map<String, dynamic>.from(recipe));
-                                        }
-                                      });
-                                    },
-                                  ),
+                            child:
+                                _favoriteRecipes.isEmpty
+                                    ? const Center(child: Text('No tienes recetas favoritas.'))
+                                    : CustomListView(
+                                      recipes: [
+                                        _favoriteRecipes.first,
+                                      ], // Solo la primera receta favorita
+                                      favoriteRecipes: _favoriteRecipes,
+                                      showFavoriteIcon: true,
+                                      onTap: (recipe) async {
+                                        await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder:
+                                                (context) => RecipeDetailScreen(
+                                                  recipeId: recipe['id'],
+                                                ),
+                                          ),
+                                        );
+                                        _loadFavoriteRecipes(); // Refresca favoritos al volver
+                                      },
+                                      onFavoriteTap: (recipe) async {
+                                        await _favoritesManager
+                                            .removeFavoriteRecipe(recipe['id']);
+                                        _loadFavoriteRecipes(); // Refresca la lista
+                                      },
+                                    ),
                           ),
+                          if (_favoriteRecipes.isNotEmpty)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => FavoriteRecipesScreen(favoriteRecipes: _favoriteRecipes),
+                                    ),
+                                  );
+                                },
+                                child: const Text('Ver todas las favoritas'),
+                              ),
+                            ),
                         ],
                       ),
                     ),
@@ -201,6 +232,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
-
-

@@ -30,7 +30,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
           BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Descubrir'),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Buscar'),
+          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Buscar'),//lo quitamos por que ya hace la funcionalidad de buscar en la pantalla de descubrir 
           BottomNavigationBarItem(icon: Icon(Icons.shopping_cart), label: 'Carrito'),
         ],
       ),

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class SpoonacularService {
-  static const String _apiKey = 'a99522d6b0404ae1b3aa7e2c2ff674b3';
+  static const String _apiKey = '928410069b8c41f8b9c142318c653418';
   static const String _baseUrl = 'https://api.spoonacular.com';
 
   Future<List<dynamic>> getPopularRecipes({int number = 5}) async {
@@ -66,6 +66,38 @@ class SpoonacularService {
     } catch (e) {
       print('Network error loading recipes in bulk: $e');
       throw Exception('Network error loading recipes in bulk');
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getRecipes({
+    String? query,
+    String? sort,
+    String? type,
+    String? diet,
+    int? maxReadyTime,
+  }) async {
+    final Map<String, String> params = {
+      'apiKey': _apiKey,
+      'number': '20',
+      if (query != null && query.isNotEmpty) 'query': query,
+      if (sort != null) 'sort': sort,
+      if (type != null && type.isNotEmpty) 'type': type,
+      if (diet != null && diet.isNotEmpty) 'diet': diet,
+      if (maxReadyTime != null) 'maxReadyTime': maxReadyTime.toString(),
+    };
+
+    final uri = Uri.https(
+      'api.spoonacular.com',
+      '/recipes/complexSearch',
+      params,
+    );
+
+    final response = await http.get(uri);
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      return List<Map<String, dynamic>>.from(data['results']);
+    } else {
+      throw Exception('Error al cargar recetas');
     }
   }
 }
