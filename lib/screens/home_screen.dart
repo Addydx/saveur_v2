@@ -7,7 +7,7 @@ import 'shopping_cart.dart';
 import '../widgets/recipe_card.dart';
 import 'recipe_detail_screen.dart';
 import '../widgets/custom_list_view.dart';
-import 'favorite_recipes_screen.dart';
+import 'favorite_recipes_screen.dart'; // Importa tu manager
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,6 +18,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final SpoonacularService _spoonacularService = SpoonacularService();
+  final FavoriteRecipesManager _favoritesManager = FavoriteRecipesManager();
   List<dynamic> _recipes = [];
   List<Map<String, dynamic>> _favoriteRecipes = []; // Lista para las recetas favoritas
   bool _isLoading = true;
@@ -34,21 +35,24 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _loadRecipes();
+    _loadFavoriteRecipes();
   }
 
   Future<void> _loadRecipes() async {
     try {
-      final recipes = await _spoonacularService.getPopularRecipes(number: 5);
+      final recipes = await _spoonacularService.getPopularRecipes(number: 20);
+      final favoriteIds = await _favoritesManager.getFavoriteRecipeIds();
+      final favoriteRecipes = recipes
+          .where((r) => favoriteIds.contains(r['id']))
+          .map((r) => Map<String, dynamic>.from(r))
+          .toList();
+
       if (mounted) {
         setState(() {
           _recipes = recipes;
+          _favoriteRecipes = favoriteRecipes;
           _isLoading = false;
-          // Solo para probar: agrega la primera receta a favoritos si hay recetas
-          if (_recipes.isNotEmpty && _favoriteRecipes.isEmpty) {
-            _favoriteRecipes.add(Map<String, dynamic>.from(_recipes[0]));
-          }
         });
-        print('Recetas cargadas: $_recipes'); // Depuración
       }
     } catch (e) {
       if (mounted) {
@@ -61,15 +65,28 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  void _navigateToRecipeDetail(int index) {
-    final recipeId = _recipes[index]['id'];
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => RecipeDetailScreen(recipeId: recipeId),
-      ),
-    );
+  Future<void> _loadFavoriteRecipes() async {
+  final favoriteIds = await _favoritesManager.getFavoriteRecipeIds();
+  List<Map<String, dynamic>> favoriteRecipes = [];
+  for (final id in favoriteIds) {
+    final recipe = await _spoonacularService.getRecipeDetail(id);
+    favoriteRecipes.add(recipe);
   }
+  setState(() {
+    _favoriteRecipes = favoriteRecipes;
+  });
+}
+
+  void _navigateToRecipeDetail(int index) async {
+  final recipeId = _recipes[index]['id'];
+  await Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => RecipeDetailScreen(recipeId: recipeId),
+    ),
+  );
+  _loadFavoriteRecipes(); // Refresca favoritos al volver
+}
 
   @override
   Widget build(BuildContext context) {

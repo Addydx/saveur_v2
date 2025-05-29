@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/spoonacular_service.dart';
+import 'package:saveur/screens/favorite_recipes_screen.dart'; // Importa tu manager
 
 class RecipeDetailScreen extends StatefulWidget {
   final int recipeId;
@@ -11,31 +12,42 @@ class RecipeDetailScreen extends StatefulWidget {
 
 class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   final SpoonacularService _service = SpoonacularService();
+  final FavoriteRecipesManager _favoritesManager = FavoriteRecipesManager();
   Map<String, dynamic>? _recipeDetail;
   bool _isLoading = true;
   String? _error;
+  bool _isFavorite = false;
 
-  // Añade una lista global o usa Provider/State Management para favoritos
-  static List<Map<String, dynamic>> favoriteRecipes = [];
-
-  bool get isFavorite {
-    return favoriteRecipes.any((r) => r['id'] == widget.recipeId);
-  }
-
-  void _toggleFavorite() {
-    setState(() {
-      if (isFavorite) {
-        favoriteRecipes.removeWhere((r) => r['id'] == widget.recipeId);
-      } else if (_recipeDetail != null) {
-        favoriteRecipes.add(_recipeDetail!);
-      }
-    });
-  }
+  static const int maxFavorites = 20; // Límite de favoritos
 
   @override
   void initState() {
     super.initState();
     _loadDetail();
+    _checkIfFavorite();
+  }
+
+  Future<void> _checkIfFavorite() async {
+    final isFav = await _favoritesManager.isRecipeFavorite(widget.recipeId);
+    setState(() {
+      _isFavorite = isFav;
+    });
+  }
+
+  Future<void> _toggleFavorite() async {
+    final ids = await _favoritesManager.getFavoriteRecipeIds();
+    if (_isFavorite) {
+      await _favoritesManager.removeFavoriteRecipe(widget.recipeId);
+    } else {
+      if (ids.length >= maxFavorites) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Solo puedes guardar hasta 20 recetas favoritas.')),
+        );
+        return;
+      }
+      await _favoritesManager.addFavoriteRecipe(widget.recipeId);
+    }
+    _checkIfFavorite();
   }
 
   Future<void> _loadDetail() async {
@@ -61,7 +73,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
         actions: [
           IconButton(
             icon: Icon(
-              isFavorite ? Icons.favorite : Icons.favorite_border,
+              _isFavorite ? Icons.favorite : Icons.favorite_border,
               color: Colors.red,
             ),
             onPressed: _toggleFavorite,
