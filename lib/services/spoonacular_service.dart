@@ -3,7 +3,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class SpoonacularService {
-  static const String _apiKey = '928410069b8c41f8b9c142318c653418';
+  static const String _apiKey = '510c6c25c84b42dea9497040df7d6d50';
+  //proximo api key 2746c96e76d44abe8bf08595e8a5e08a
   static const String _baseUrl = 'https://api.spoonacular.com';
 
   Future<List<dynamic>> getPopularRecipes({int number = 5}) async {

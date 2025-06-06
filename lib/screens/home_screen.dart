@@ -42,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _loadRecipes() async {
     try {
-      final recipes = await _spoonacularService.getPopularRecipes(number: 2);
+      final recipes = await _spoonacularService.getPopularRecipes(number: 6);
       final favoriteIds = await _favoritesManager.getFavoriteRecipeIds();
       final favoriteRecipes =
           recipes
