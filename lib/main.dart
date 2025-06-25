@@ -5,11 +5,12 @@ import 'package:saveur/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
 import 'package:saveur/screens/home_screen.dart';
 import 'screens/account_screen.dart';
-import 'package:saveur/screens/search_screen.dart';
-import 'package:saveur/screens/discover_screen.dart';
+import 'package:saveur/screens/menu_screen.dart';
 import 'package:saveur/screens/shopping_cart.dart';
 import 'package:saveur/screens/recipe_detail_screen.dart';
 import 'package:saveur/screens/main_navigation_screen.dart';
+import 'models/recipe.dart';
+import 'package:saveur/screens/diary_screen.dart'; // Asegúrate de que esta línea apunte a la ubicación correcta de tu DiaryScreen
 
 
 void main() async {
@@ -115,13 +116,14 @@ class MyApp extends StatelessWidget {
             }),
           ],
         ),
-        '/search': (context) => const SearchScreen(),
-        '/discover': (context) => const DiscoverScreen(),
+        '/search': (context) => const AccountScreen(),
+        '/discover': (context) => const MenuScreen(),
         '/shopping-cart': (context) => const ShoppingCart(),
         '/recipe-detail': (context) {
-          final recipeId = ModalRoute.of(context)!.settings.arguments as int;
-          return RecipeDetailScreen(recipeId: recipeId);
+          final recipe = ModalRoute.of(context)!.settings.arguments as Recipe;
+          return RecipeDetailScreenLocal(recipe: recipe);
         },
+        '/diary': (context) => const DiaryScreen(),
       },
     );
   }

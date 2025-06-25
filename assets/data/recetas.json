@@ -1,0 +1,543 @@
+[
+    {
+        "id": 1,
+        "title": "Tacos de carne asada",
+        "description": "Tacos típicos del norte con carne asada, limón y salsa.",
+        "ingredients": [
+            "500g de carne de res",
+            "Tortillas de maíz",
+            "Cilantro fresco",
+            "Cebolla",
+            "Salsa al gusto",
+            "Limón"
+        ],
+        "steps": [
+            "Sazona la carne con sal y pimienta.",
+            "Cocina la carne en un sartén caliente o a la parrilla.",
+            "Pica finamente la cebolla y el cilantro.",
+            "Calienta las tortillas.",
+            "Sirve la carne sobre las tortillas y agrega cebolla, cilantro, salsa y limón."
+        ],
+        "image": "assets/images/tacos.jpg",
+        "category": "platillo",
+        "time": "30 min",
+        "difficulty": "fácil",
+        "servings": "4 personas"
+    },
+    {
+        "id": 2,
+        "title": "Enfrijoladas",
+        "description": "Tortillas bañadas en salsa de frijol y rellenas de queso, una receta sencilla y deliciosa.",
+        "ingredients": [
+            "8 tortillas de maíz",
+            "2 tazas de frijoles cocidos (negros o bayos)",
+            "1/2 taza de caldo de pollo o agua",
+            "1 diente de ajo",
+            "1/4 de cebolla",
+            "Aceite vegetal",
+            "100g de queso fresco",
+            "Crema al gusto",
+            "Sal al gusto"
+        ],
+        "steps": [
+            "Licúa los frijoles cocidos con el caldo, ajo y cebolla hasta obtener una salsa espesa.",
+            "Calienta un poco de aceite en una sartén y vierte la salsa. Cocina por 5 minutos y ajusta la sal.",
+            "Calienta ligeramente las tortillas para que no se rompan.",
+            "Rellena cada tortilla con queso fresco y dóblalas como quesadillas.",
+            "Baña las tortillas con la salsa de frijol caliente.",
+            "Sirve con crema, más queso encima y, si deseas, cebolla morada en rodajas."
+        ],
+        "image": "assets/images/enfrijoladas.jpg",
+        "category": "platillo",
+        "time": "25 min",
+        "difficulty": "fácil",
+        "servings": "4 personas"
+    },
+    {
+        "id": 3,
+        "title": "Chilaquiles Verdes",
+        "description": "Totopos bañados en salsa verde con pollo, queso y crema. Un desayuno clásico mexicano.",
+        "ingredients": [
+            "8 tortillas de maíz (del día anterior)",
+            "4 tomates verdes",
+            "1 diente de ajo",
+            "1/4 de cebolla",
+            "1 chile serrano (opcional)",
+            "Aceite vegetal",
+            "1 taza de pollo deshebrado",
+            "100g de queso fresco",
+            "Crema al gusto",
+            "Cilantro picado",
+            "Sal al gusto"
+        ],
+        "steps": [
+            "Corta las tortillas en triángulos y fríelas en aceite hasta que estén crujientes. Reserva en papel absorbente.",
+            "Cuece los tomates, chile, ajo y cebolla en agua por 10 minutos.",
+            "Licúa los ingredientes cocidos hasta obtener una salsa verde homogénea.",
+            "En una sartén con poco aceite, vierte la salsa y cocina por 5 minutos. Ajusta de sal.",
+            "Agrega los totopos a la salsa y mezcla hasta que se suavicen ligeramente.",
+            "Sirve con pollo deshebrado, queso fresco, crema y cilantro picado."
+        ],
+        "image": "assets/images/chilaquiles.jpg",
+        "category": "platillo",
+        "time": "30 min",
+        "difficulty": "media",
+        "servings": "4 personas"
+    },
+    {
+        "id": 4,
+        "title": "Tacos dorados de pollo",
+        "description": "Tortillas rellenas de pollo deshebrado, doradas y servidas con lechuga, crema y salsa.",
+        "ingredients": [
+            "8 tortillas de maíz",
+            "2 tazas de pollo cocido y deshebrado",
+            "Aceite vegetal",
+            "Lechuga picada",
+            "Crema al gusto",
+            "Queso rallado",
+            "Salsa al gusto"
+        ],
+        "steps": [
+            "Rellena cada tortilla con pollo deshebrado y enróllala.",
+            "Sujeta con palillos para evitar que se abran.",
+            "Fríe en aceite caliente hasta que estén doradas y crujientes.",
+            "Escurre sobre papel absorbente.",
+            "Sirve con lechuga, crema, queso y salsa."
+        ],
+        "image": "assets/images/tacos_dorados.jpg",
+        "category": "platillo",
+        "time": "35 min",
+        "difficulty": "media",
+        "servings": "4 personas"
+    },
+    {
+        "id": 5,
+        "title": "Huevo a la mexicana",
+        "description": "Huevos revueltos con jitomate, cebolla y chile, al estilo mexicano.",
+        "ingredients": [
+            "3 huevos",
+            "1 jitomate picado",
+            "1/4 de cebolla picada",
+            "1 chile serrano picado",
+            "Aceite",
+            "Sal al gusto"
+        ],
+        "steps": [
+            "Sofríe la cebolla y el chile en un poco de aceite.",
+            "Agrega el jitomate y cocina hasta que se suavice.",
+            "Bate los huevos y agrégalos a la sartén.",
+            "Revuelve hasta que el huevo esté cocido.",
+            "Ajusta la sal y sirve caliente."
+        ],
+        "image": "assets/images/huevo_mexicana.jpg",
+        "category": "desayuno",
+        "time": "15 min",
+        "difficulty": "fácil",
+        "servings": "2 personas"
+    },
+    {
+        "id": 6,
+        "title": "Hamburguesa clásica",
+        "description": "Hamburguesa con carne de res, lechuga, jitomate, queso y pan tostado.",
+        "ingredients": [
+            "2 panes para hamburguesa",
+            "2 carnes de res para hamburguesa",
+            "2 rebanadas de queso",
+            "Lechuga",
+            "Jitomate en rodajas",
+            "Cebolla en rodajas",
+            "Mostaza, mayonesa o catsup al gusto"
+        ],
+        "steps": [
+            "Cocina la carne en una sartén hasta dorar por ambos lados.",
+            "Tuesta ligeramente los panes.",
+            "Arma la hamburguesa: pan, carne, queso, jitomate, lechuga, cebolla y salsas.",
+            "Cubre con la tapa del pan y sirve caliente."
+        ],
+        "image": "assets/images/hamburguesa.jpg",
+        "category": "platillo",
+        "time": "20 min",
+        "difficulty": "fácil",
+        "servings": "2 personas"
+    },
+    {
+        "id": 7,
+        "title": "Caldo de pollo",
+        "description": "Caldo casero con pollo, verduras y arroz, ideal para días fríos o cuando estás enfermo.",
+        "ingredients": [
+            "1 pechuga de pollo",
+            "2 zanahorias",
+            "2 papas",
+            "1 calabacita",
+            "1/2 taza de arroz",
+            "1/4 de cebolla",
+            "1 diente de ajo",
+            "Agua",
+            "Sal al gusto"
+        ],
+        "steps": [
+            "Coloca la pechuga en una olla con agua, cebolla y ajo. Cocina hasta que esté suave.",
+            "Agrega las verduras peladas y cortadas en cubos y el arroz.",
+            "Cocina por 20 minutos o hasta que todo esté cocido.",
+            "Sazona con sal y sirve caliente."
+        ],
+        "image": "assets/images/caldo_pollo.jpg",
+        "category": "sopa",
+        "time": "45 min",
+        "difficulty": "fácil",
+        "servings": "4 personas"
+    },
+    {
+        "id": 8,
+        "title": "Mole poblano",
+        "description": "Pollo bañado en mole poblano, una salsa espesa hecha con chiles y chocolate.",
+        "ingredients": [
+            "2 piezas de pollo cocido",
+            "1 taza de mole en pasta o en polvo",
+            "2 tazas de caldo de pollo",
+            "Aceite",
+            "Ajonjolí tostado"
+        ],
+        "steps": [
+            "Disuelve el mole con el caldo de pollo hasta que no tenga grumos.",
+            "Calienta en una olla con un poco de aceite, moviendo constantemente.",
+            "Agrega el pollo cocido y deja que se impregne bien.",
+            "Sirve con arroz blanco y espolvorea ajonjolí encima."
+        ],
+        "image": "assets/images/mole.jpg",
+        "category": "platillo",
+        "time": "40 min",
+        "difficulty": "media",
+        "servings": "2 personas"
+    },
+    {
+        "id": 9,
+        "title": "Arroz con leche",
+        "description": "Postre tradicional mexicano con arroz, leche, canela y leche condensada.",
+        "ingredients": [
+            "1 taza de arroz",
+            "2 tazas de agua",
+            "1 raja de canela",
+            "3 tazas de leche",
+            "1 lata de leche condensada",
+            "1 cucharadita de vainilla",
+            "Canela en polvo"
+        ],
+        "steps": [
+            "Cocina el arroz con el agua y la raja de canela hasta que el agua se evapore.",
+            "Agrega la leche, leche condensada y vainilla.",
+            "Cocina a fuego bajo, moviendo constantemente, hasta que espese.",
+            "Sirve frío o caliente, espolvoreado con canela."
+        ],
+        "image": "assets/images/arroz_con_leche.jpg",
+        "category": "postre",
+        "time": "40 min",
+        "difficulty": "fácil",
+        "servings": "4 personas"
+    },
+    {
+        "id": 10,
+        "title": "Molcajete vegetariano",
+        "description": "Nopales, pimiento y queso fresco en molcajete, servido con tortillas.",
+        "ingredients": [
+            "2 nopales",
+            "1/2 cebolla morada",
+            "1 tomate",
+            "1/2 pimiento morrón",
+            "100g de queso fresco",
+            "Tortillas de maíz"
+        ],
+        "steps": [
+            "Saltea nopales, cebolla y pimiento hasta que se suavicen.",
+            "Agrega el tomate picado y cocina por unos minutos.",
+            "Coloca todo en el molcajete caliente y espolvorea queso fresco.",
+            "Sirve acompañado de tortillas calientes."
+        ],
+        "image": "assets/images/molcajete_vegetariano.jpg",
+        "category": "platillo",
+        "time": "20 min",
+        "difficulty": "fácil",
+        "servings": "4 personas"
+    },
+    {
+        "id": 11,
+        "title": "Pozole verde vegetariano",
+        "description": "Pozole con maíz y verduras, sin carne.",
+        "ingredients": [
+            "2 tazas de maíz pozolero precocido",
+            "2 chiles poblanos",
+            "4 tomates verdes",
+            "1/4 de cebolla",
+            "1 diente de ajo",
+            "1 papa",
+            "1 camote pequeño",
+            "Orégano",
+            "Comino",
+            "Sal al gusto"
+        ],
+        "steps": [
+            "Asa los chiles poblanos y los tomates verdes.",
+            "Licúa con ajo y cebolla para hacer la salsa.",
+            "Saltea la salsa y añade agua, orégano, comino y sal.",
+            "Agrega el maíz y las verduras picadas.",
+            "Cocina por 1 hora hasta que todo esté suave."
+        ],
+        "image": "assets/images/pozole_vegetariano.jpg",
+        "category": "vegetariano",
+        "time": "60 min",
+        "difficulty": "media",
+        "servings": "6 personas"
+    },
+    {
+        "id": 12,
+        "title": "Sopa de tortilla",
+        "description": "Caldo de jitomate con tiras de tortilla, aguacate, queso y crema.",
+        "ingredients": [
+            "4 jitomates",
+            "1/4 de cebolla",
+            "1 diente de ajo",
+            "1 litro de caldo de pollo o vegetal",
+            "4 tortillas de maíz",
+            "1 chile pasilla",
+            "1 aguacate",
+            "100g de queso fresco",
+            "Crema al gusto",
+            "Sal al gusto",
+            "Epazote"
+        ],
+        "steps": [
+            "Licúa los jitomates con el ajo y la cebolla.",
+            "Fríe esta mezcla en una olla con un poco de aceite.",
+            "Agrega el caldo y epazote, y cocina por 10 minutos.",
+            "Fríe las tiras de tortilla hasta dorar.",
+            "Sirve el caldo caliente con tortilla, aguacate, queso y crema."
+        ],
+        "image": "assets/images/sopa_tortilla.jpg",
+        "category": "sopa",
+        "time": "30 min",
+        "difficulty": "media",
+        "servings": "4 personas"
+    },
+    {
+        "id": 13,
+        "title": "Tlayudas oaxaqueñas",
+        "description": "Tortillas grandes y crujientes untadas con asiento, frijoles, quesillo, y acompañadas con carne o vegetales.",
+        "ingredients": [
+            "4 tlayudas (tortillas grandes y secas)",
+            "1 taza de frijoles refritos",
+            "100g de asiento (manteca de cerdo, opcional)",
+            "200g de quesillo (queso Oaxaca) deshebrado",
+            "1/2 repollo finamente picado",
+            "1 jitomate en rodajas",
+            "1 aguacate en rebanadas",
+            "Cecina, chorizo o champiñones (opcional)",
+            "Salsa al gusto"
+        ],
+        "steps": [
+            "Unta las tlayudas con asiento y frijoles refritos.",
+            "Agrega el quesillo deshebrado y el ingrediente principal (cecina, chorizo o champiñones).",
+            "Dobla la tlayuda por la mitad.",
+            "Calienta en comal o sartén hasta que esté crujiente por fuera y el queso se derrita.",
+            "Sirve con repollo, jitomate, aguacate y salsa al gusto."
+        ],
+        "image": "assets/images/tlayuda_oaxaquena.jpg",
+        "category": "platillo",
+        "time": "30 min",
+        "difficulty": "media",
+        "servings": "4 personas"
+    },
+    {
+        "id": 14,
+        "title": "Horchata de maíz",
+        "description": "Bebida refrescante con harina de maíz, agua, leche y canela.",
+        "ingredients": [
+            "1/2 taza de harina de maíz",
+            "4 tazas de agua",
+            "1 taza de leche",
+            "1 raja de canela",
+            "1/2 taza de azúcar",
+            "1 cucharadita de vainilla",
+            "Hielo al gusto"
+        ],
+        "steps": [
+            "Hierve el agua con canela y añade la harina de maíz.",
+            "Cocina removiendo hasta que espese ligeramente.",
+            "Deja enfriar y cuela.",
+            "Mezcla con leche, azúcar, vainilla y sirve con hielo."
+        ],
+        "image": "assets/images/horchata_maiz.jpg",
+        "category": "bebida",
+        "time": "15 min",
+        "difficulty": "fácil",
+        "servings": "4 personas"
+    },
+    {
+        "id": 15,
+        "title": "Champurrado",
+        "description": "Bebida espesa de chocolate con masa de maíz y canela.",
+        "ingredients": [
+            "4 tazas de agua",
+            "2 cucharadas de harina de maíz",
+            "1 raja de canela",
+            "1/2 taza de piloncillo rallado",
+            "100g de chocolate mexicano",
+            "1 cucharadita de vainilla"
+        ],
+        "steps": [
+            "Hierve el agua con canela y disuelve el piloncillo.",
+            "Añade la harina disuelta en un poco de agua.",
+            "Agrega el chocolate y mezcla constantemente.",
+            "Hierve hasta que espese ligeramente.",
+            "Añade vainilla y sirve caliente."
+        ],
+        "image": "assets/images/champurrado.jpg",
+        "category": "bebida",
+        "time": "20 min",
+        "difficulty": "fácil",
+        "servings": "4 personas"
+    },
+    {
+        "id": 16,
+        "title": "Jericalla",
+        "description": "Postre jalisciense similar al flan, con capa caramelizada.",
+        "ingredients": [
+            "2 tazas de leche",
+            "1 taza de crema",
+            "4 huevos",
+            "1/2 taza de azúcar",
+            "1 cucharadita de vainilla",
+            "Canela en polvo"
+        ],
+        "steps": [
+            "Precalienta el horno a 180°C.",
+            "Bate los huevos con el azúcar y añade la leche, crema y vainilla.",
+            "Vierte la mezcla en moldes individuales.",
+            "Hornea a baño María por 45 minutos o hasta que cuaje.",
+            "Deja enfriar y espolvorea canela antes de servir."
+        ],
+        "image": "assets/images/jericalla.jpg",
+        "category": "postre",
+        "time": "60 min",
+        "difficulty": "media",
+        "servings": "6 personas"
+    },
+    {
+        "id": 17,
+        "title": "Elotes preparados",
+        "description": "Elotes cocidos con mayonesa, queso rallado, chile en polvo y limón.",
+        "ingredients": [
+            "4 elotes cocidos",
+            "1/2 taza de mayonesa",
+            "1/2 taza de queso cotija rallado",
+            "Chile en polvo al gusto",
+            "Limones partidos"
+        ],
+        "steps": [
+            "Unta cada elote con mayonesa.",
+            "Espolvorea queso rallado y chile en polvo.",
+            "Sirve caliente con limón al gusto."
+        ],
+        "image": "assets/images/elotes_preparados.jpg",
+        "category": "snack",
+        "time": "15 min",
+        "difficulty": "fácil",
+        "servings": "4 personas"
+    },
+    {
+        "id": 18,
+        "title": "Guacamole con totopos",
+        "description": "Dip de aguacate con jitomate, cebolla y limón, acompañado de totopos.",
+        "ingredients": [
+            "2 aguacates maduros",
+            "1/4 de cebolla picada",
+            "1 jitomate picado",
+            "1 chile serrano picado (opcional)",
+            "Jugo de 1 limón",
+            "Sal al gusto",
+            "Totopos para acompañar"
+        ],
+        "steps": [
+            "Machaca los aguacates en un tazón.",
+            "Agrega jitomate, cebolla, chile, limón y sal.",
+            "Mezcla bien y sirve con totopos."
+        ],
+        "image": "assets/images/guacamole_totopos.jpg",
+        "category": "snack",
+        "time": "10 min",
+        "difficulty": "fácil",
+        "servings": "4 personas"
+    },
+    {
+        "id": 19,
+        "title": "Esquites",
+        "description": "Vasitos de granos de elote salteados con epazote, servidos con mayonesa, queso y chile.",
+        "ingredients": [
+            "2 tazas de granos de elote",
+            "1/4 de cebolla picada",
+            "1 ramita de epazote",
+            "1 cucharada de mantequilla",
+            "Sal al gusto",
+            "Mayonesa",
+            "Queso rallado",
+            "Chile en polvo",
+            "Limón"
+        ],
+        "steps": [
+            "Saltea la cebolla con mantequilla y agrega los granos de elote.",
+            "Agrega epazote y sal, y cocina por 10 minutos.",
+            "Sirve en vasitos con mayonesa, queso, chile y limón al gusto."
+        ],
+        "image": "assets/images/esquites.jpg",
+        "category": "snack",
+        "time": "20 min",
+        "difficulty": "fácil",
+        "servings": "4 personas"
+    },
+    {
+        "id": 20,
+        "title": "Tostilocos",
+        "description": "Botana callejera con totopos, cueritos, jícama, cacahuates, chamoy y chile.",
+        "ingredients": [
+            "1 bolsa de totopos (tipo tostitos)",
+            "1/2 taza de cueritos en vinagre",
+            "1/2 taza de jícama picada",
+            "1/4 taza de zanahoria rallada",
+            "1/4 taza de cacahuates salados",
+            "Chamoy al gusto",
+            "Salsa picante al gusto",
+            "Limón"
+        ],
+        "steps": [
+            "Abre la bolsa de totopos o vierte en un plato.",
+            "Agrega cueritos, jícama, zanahoria y cacahuates.",
+            "Baña con chamoy, salsa y limón al gusto."
+        ],
+        "image": "assets/images/tostilocos.jpg",
+        "category": "snack",
+        "time": "10 min",
+        "difficulty": "fácil",
+        "servings": "2 personas"
+    },
+    {
+        "id": 21,
+        "title": "Palomitas con chile y limón",
+        "description": "Palomitas de maíz con jugo de limón, chile en polvo y sal.",
+        "ingredients": [
+            "1/2 taza de maíz palomero",
+            "2 cucharadas de aceite vegetal",
+            "Jugo de 2 limones",
+            "Chile en polvo al gusto",
+            "Sal al gusto"
+        ],
+        "steps": [
+            "Prepara las palomitas en una olla con aceite.",
+            "Colócalas en un tazón y rocía con jugo de limón.",
+            "Agrega chile y sal al gusto, mezcla bien y sirve."
+        ],
+        "image": "assets/images/palomitas_chile_limon.jpg",
+        "category": "snack",
+        "time": "10 min",
+        "difficulty": "fácil",
+        "servings": "4 personas"
+    }
+]

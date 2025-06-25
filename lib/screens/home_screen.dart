@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import '../widgets/recipe_carousel_card.dart';
-import '../services/spoonacular_service.dart';
-import 'discover_screen.dart';
-import 'search_screen.dart';
+import 'package:saveur/services/data_providers/local_recipe_provider.dart';
+import 'package:saveur/models/recipe.dart';
 import 'shopping_cart.dart';
-import '../widgets/recipe_card.dart';
-import 'recipe_detail_screen.dart';
-import '../widgets/custom_list_view.dart';
-import 'favorite_recipes_screen.dart'; // Importa tu manager
+import 'favorite_recipes_screen.dart';
 import '../data/favorite_recipes_manager.dart';
+import 'recipe_detail_screen.dart';
+import 'diary_screen.dart';
+import 'category_recipes_screen.dart'; // Asegúrate de importar la pantalla de categorías
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,82 +16,109 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final SpoonacularService _spoonacularService = SpoonacularService();
   final FavoriteRecipesManager _favoritesManager = FavoriteRecipesManager();
-  List<dynamic> _recipes = [];
-  List<Map<String, dynamic>> _favoriteRecipes =
-      []; // Lista para las recetas favoritas
-  bool _isLoading = true;
-  String? _errorMessage;
+  List<Recipe> _localRecipes = [];
+  bool _isLoadingLocal = true;
+  List<Recipe> _favoriteRecipes = [];
+  int _currentIndex = 0;
+  String _searchQuery = '';
+  List<String> _selectedIngredients = [];
+  List<String> _ingredientSuggestions = [];
+  TextEditingController _searchController = TextEditingController();
 
-  int _currentIndex = 0; // Índice actual del BottomNavigationBar
   final List<Widget> _screens = [
-    const DiscoverScreen(), // Pantalla de descubrir
-    const SearchScreen(), // Pantalla de búsqueda
-    const ShoppingCart(), // Pantalla del carrito
+    // Puedes agregar más pantallas si lo deseas
+    const ShoppingCart(),
   ];
 
   @override
   void initState() {
     super.initState();
-    _loadRecipes();
+    _loadLocalRecipes();
     _loadFavoriteRecipes();
   }
 
-  Future<void> _loadRecipes() async {
+  Future<void> _loadLocalRecipes() async {
     try {
-      final recipes = await _spoonacularService.getPopularRecipes(number: 6);
-      final favoriteIds = await _favoritesManager.getFavoriteRecipeIds();
-      final favoriteRecipes =
-          recipes
-              .where((r) => favoriteIds.contains(r['id']))
-              .map((r) => Map<String, dynamic>.from(r))
-              .toList();
-
-      if (mounted) {
-        setState(() {
-          _recipes = recipes;
-          _favoriteRecipes = favoriteRecipes;
-          _isLoading = false;
-        });
-      }
+      final recetas = await cargarRecetasLocales();
+      setState(() {
+        _localRecipes = recetas;
+        _isLoadingLocal = false;
+      });
     } catch (e) {
-      if (mounted) {
-        setState(() {
-          _errorMessage = 'Error al cargar recetas. Intenta de nuevo.';
-          _isLoading = false;
-        });
-      }
-      print('Error al cargar recetas: $e'); // Depuración
+      setState(() {
+        _isLoadingLocal = false;
+      });
+      print('Error al cargar recetas locales: $e');
     }
   }
 
   Future<void> _loadFavoriteRecipes() async {
     final favoriteIds = await _favoritesManager.getFavoriteRecipeIds();
-    List<Map<String, dynamic>> favoriteRecipes = [];
-    for (final id in favoriteIds) {
-      final recipe = await _spoonacularService.getRecipeDetail(id);
-      favoriteRecipes.add(recipe);
-    }
-    if (!mounted) return; // <--- Esto es clave
     setState(() {
-      _favoriteRecipes = favoriteRecipes;
+      _favoriteRecipes = _localRecipes.where((r) => favoriteIds.contains(r.id)).toList();
     });
   }
 
-  void _navigateToRecipeDetail(int index) async {
-    final recipeId = _recipes[index]['id'];
+  void _navigateToRecipeDetail(Recipe recipe) async {
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => RecipeDetailScreen(recipeId: recipeId),
+        builder: (context) => RecipeDetailScreenLocal(recipe: recipe),
       ),
     );
-    _loadFavoriteRecipes(); // Refresca favoritos al volver
+  }
+
+  List<String> _getIngredientSuggestions(String query) {
+    if (query.isEmpty) return [];
+    final allIngredients = _localRecipes.expand((r) => r.ingredients).toSet().toList();
+    return allIngredients
+        .where((ingredient) =>
+            ingredient.toLowerCase().contains(query.toLowerCase()) &&
+            !_selectedIngredients.contains(ingredient))
+        .toList();
+  }
+
+  void _addIngredient(String ingredient) {
+    setState(() {
+      if (!_selectedIngredients.contains(ingredient)) {
+        _selectedIngredients.add(ingredient);
+      }
+      _searchQuery = '';
+      _searchController.clear();
+      _ingredientSuggestions = [];
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    List<Recipe> filteredRecipes = _localRecipes.where((recipe) {
+      final matchesTitle = recipe.title.toLowerCase().contains(_searchQuery.toLowerCase());
+      final matchesIngredient = _selectedIngredients.isEmpty ||
+          _selectedIngredients.every((ing) =>
+              recipe.ingredients.any((rIng) => rIng.toLowerCase().contains(ing.toLowerCase())));
+      // Si hay texto en el buscador, busca por título o ingrediente
+      if (_searchQuery.isNotEmpty && _selectedIngredients.isEmpty) {
+        return matchesTitle ||
+            recipe.ingredients.any((ing) => ing.toLowerCase().contains(_searchQuery.toLowerCase()));
+      }
+      // Si hay ingredientes seleccionados, filtra por ellos
+      return matchesIngredient;
+    }).toList();
+
+    final List<Map<String, dynamic>> categories = [
+      {'name': 'Platillos', 'icon': Icons.restaurant, 'filter': 'platillo'},
+      {'name': 'Desayunos', 'icon': Icons.free_breakfast, 'filter': 'desayuno'},
+      {'name': 'Postres', 'icon': Icons.cake, 'filter': 'postre'},
+      {'name': 'Sopas y caldos', 'icon': Icons.ramen_dining, 'filter': 'sopa'},
+      {'name': 'Bebidas', 'icon': Icons.local_drink, 'filter': 'bebida'},
+      {'name': 'Recetas rápidas', 'icon': Icons.flash_on, 'filter': 'rápida'},
+      {'name': 'Mexicanas', 'icon': Icons.flag, 'filter': 'mexicana'},
+      {'name': 'Vegetariano', 'icon': Icons.eco, 'filter': 'vegetariano'},
+      {'name': 'Snacks', 'icon': Icons.fastfood, 'filter': 'snack'},
+      {'name': 'Internacionales', 'icon': Icons.public, 'filter': 'internacional'},
+    ];
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -114,121 +139,180 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         centerTitle: true,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.account_circle),
-            onPressed: () => Navigator.pushNamed(context, '/account'),
-          ),
+          // IconButton(
+          //   icon: const Icon(Icons.account_circle),
+          //   onPressed: () => Navigator.pushNamed(context, '/account'),
+          // ),
         ],
       ),
-      body:
-          _currentIndex == 0
-              ? Column(
+      body: _currentIndex == 0
+          ? SingleChildScrollView(
+              child: Column(
                 children: [
-                  if (_isLoading)
-                    const Expanded(
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextField(
+                          controller: _searchController,
+                          decoration: InputDecoration(
+                            hintText: 'Buscar receta o ingrediente...',
+                            prefixIcon: const Icon(Icons.search),
+                            suffixIcon: _searchQuery.isNotEmpty
+                                ? IconButton(
+                                    icon: const Icon(Icons.clear),
+                                    onPressed: () {
+                                      setState(() {
+                                        _searchQuery = '';
+                                        _searchController.clear();
+                                        _ingredientSuggestions = [];
+                                        _selectedIngredients = [];
+                                      });
+                                    },
+                                  )
+                                : null,
+                          ),
+                          onChanged: (value) {
+                            setState(() {
+                              _searchQuery = value;
+                              _ingredientSuggestions = _getIngredientSuggestions(value);
+                            });
+                          },
+                          onSubmitted: (value) {
+                            if (_ingredientSuggestions.isNotEmpty && value.isNotEmpty) {
+                              _addIngredient(_ingredientSuggestions.first);
+                            }
+                          },
+                        ),
+                        const SizedBox(height: 8),
+                        Wrap(
+                          spacing: 8,
+                          children: _selectedIngredients
+                              .map((ingredient) => Chip(
+                                    label: Text(ingredient),
+                                    onDeleted: () {
+                                      setState(() {
+                                        _selectedIngredients.remove(ingredient);
+                                      });
+                                    },
+                                  ))
+                              .toList(),
+                        ),
+                        if (_ingredientSuggestions.isNotEmpty && _searchQuery.isNotEmpty)
+                          Wrap(
+                            spacing: 8,
+                            children: _ingredientSuggestions
+                                .map((suggestion) => ActionChip(
+                                      label: Text(suggestion),
+                                      onPressed: () => _addIngredient(suggestion),
+                                    ))
+                                .toList(),
+                          ),
+                      ],
+                    ),
+                  ),
+                  if (_isLoadingLocal)
+                    const SizedBox(
+                      height: 250,
                       child: Center(child: CircularProgressIndicator()),
                     )
-                  else if (_errorMessage != null)
-                    Expanded(
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(_errorMessage!),
-                            const SizedBox(height: 16),
-                            ElevatedButton(
-                              onPressed: _loadRecipes,
-                              child: const Text('Reintentar'),
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                  else
-                    Expanded(
-                      child: Column(
-                        children: [
-                          RecipeCarouselCard(
-                            recipes: _recipes,
-                            onRecipeTap: _navigateToRecipeDetail,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                setState(() {
-                                  _currentIndex = 1; // Cambia a DiscoverScreen
-                                });
-                              },
-                              style: ElevatedButton.styleFrom(
-                                minimumSize: const Size(double.infinity, 50),
-                              ),
-                              child: const Text('Explorar más recetas'),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 8,
-                            ),
-                            child: Text(
-                              'Recetas favoritas',
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child:
-                                _favoriteRecipes.isEmpty
-                                    ? const Center(child: Text('No tienes recetas favoritas.'))
-                                    : CustomListView(
-                                      recipes: [
-                                        _favoriteRecipes.first,
-                                      ], // Solo la primera receta favorita
-                                      favoriteRecipes: _favoriteRecipes,
-                                      showFavoriteIcon: true,
-                                      onTap: (recipe) async {
-                                        await Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder:
-                                                (context) => RecipeDetailScreen(
-                                                  recipeId: recipe['id'],
-                                                ),
-                                          ),
-                                        );
-                                        _loadFavoriteRecipes(); // Refresca favoritos al volver
-                                      },
-                                      onFavoriteTap: (recipe) async {
-                                        await _favoritesManager
-                                            .removeFavoriteRecipe(recipe['id']);
-                                        _loadFavoriteRecipes(); // Refresca la lista
-                                      },
+                  else if (_localRecipes.isNotEmpty)
+                    SizedBox(
+                      height: 250,
+                      child: PageView.builder(
+                        itemCount: _localRecipes.length,
+                        controller: PageController(viewportFraction: 0.85),
+                        itemBuilder: (context, index) {
+                          final recipe = _localRecipes[index];
+                          return GestureDetector(
+                            onTap: () => _navigateToRecipeDetail(recipe),
+                            child: Card(
+                              margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 24),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  if (recipe.image.isNotEmpty)
+                                    ClipRRect(
+                                      borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                                      child: Image.asset(
+                                        recipe.image,
+                                        width: double.infinity,
+                                        height: 140,
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
-                          ),
-                          if (_favoriteRecipes.isNotEmpty)
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => FavoriteRecipesScreen(favoriteRecipes: _favoriteRecipes),
+                                  Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Text(
+                                      recipe.title,
+                                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
-                                  );
-                                },
-                                child: const Text('Ver todas las favoritas'),
+                                  ),
+                                ],
                               ),
                             ),
-                        ],
+                          );
+                        },
                       ),
                     ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: Text(
+                      'Categorías',
+                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  GridView.count(
+                    crossAxisCount: 2,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    childAspectRatio: 2.5,
+                    mainAxisSpacing: 12,
+                    crossAxisSpacing: 12,
+                    children: categories.map((cat) {
+                      return Card(
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(12),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => CategoryRecipesScreen(
+                                  categoryName: cat['name'],
+                                  allRecipes: _localRecipes,
+                                  filter: cat['filter'], // <-- Nuevo campo
+                                ),
+                              ),
+                            );
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(cat['icon'], color: Theme.of(context).primaryColor),
+                              const SizedBox(width: 10),
+                              Flexible(
+                                child: Text(
+                                  cat['name'],
+                                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
                 ],
-              )
-              : _screens[_currentIndex], // Cambia la pantalla según el índice,
+              ),
+            )
+          : _screens[_currentIndex],
     );
   }
 }

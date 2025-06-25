@@ -1,11 +1,10 @@
 // lib/screens/favorite_recipes_screen.dart
 import 'package:flutter/material.dart';
-import '../widgets/custom_list_view.dart';
-import 'favorite_recipes_screen.dart'; 
-import '../data/favorite_recipes_manager.dart';
+import '../models/recipe.dart';
 import 'recipe_detail_screen.dart';
+
 class FavoriteRecipesScreen extends StatelessWidget {
-  final List<Map<String, dynamic>> favoriteRecipes;
+  final List<Recipe> favoriteRecipes;
 
   const FavoriteRecipesScreen({super.key, required this.favoriteRecipes});
 
@@ -15,23 +14,31 @@ class FavoriteRecipesScreen extends StatelessWidget {
       appBar: AppBar(title: const Text('Mis Recetas Favoritas')),
       body: favoriteRecipes.isEmpty
           ? const Center(child: Text('No tienes recetas favoritas.'))
-          : CustomListView(
-              recipes: favoriteRecipes,
-              favoriteRecipes: favoriteRecipes,
-              showFavoriteIcon: true,
-              onTap: (recipe) async {
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => RecipeDetailScreen(recipeId: recipe['id']),
+          : ListView.builder(
+              itemCount: favoriteRecipes.length,
+              itemBuilder: (context, index) {
+                final recipe = favoriteRecipes[index];
+                return ListTile(
+                  leading: recipe.image.isNotEmpty
+                      ? Image.asset(recipe.image, width: 40, height: 40, fit: BoxFit.cover)
+                      : const Icon(Icons.image_not_supported),
+                  title: Text(recipe.title),
+                  subtitle: Text(recipe.description),
+                  onTap: () async {
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RecipeDetailScreenLocal(recipe: recipe),
+                      ),
+                    );
+                  },
+                  trailing: IconButton(
+                    icon: const Icon(Icons.favorite, color: Colors.red),
+                    onPressed: () async {
+                      // Aquí deberías quitar de favoritos y refrescar la lista si lo deseas
+                    },
                   ),
                 );
-                // Si quieres refrescar la lista aquí, deberías convertir este widget en StatefulWidget
-              },
-              onFavoriteTap: (recipe) async {
-                // Aquí necesitas acceso al manager, puedes pasarlo como argumento o usar Provider
-                await FavoriteRecipesManager().removeFavoriteRecipe(recipe['id']);
-                // Si quieres refrescar la lista aquí, deberías convertir este widget en StatefulWidget
               },
             ),
     );
